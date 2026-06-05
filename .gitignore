@@ -1,0 +1,22 @@
+# Elixir/Phoenix
+/_build/
+/cover/
+/deps/
+/doc/
+/.fetch
+erl_crash.dump
+*.ez
+*.tar
+/tmp/
+
+# React/Node
+node_modules/
+dist/
+.env
+.env.local
+
+# Worktrees
+.worktrees/
+
+# OS
+.DS_Store
