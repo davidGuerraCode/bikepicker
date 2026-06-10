@@ -9,6 +9,9 @@ defmodule MotorcycleAdvisorWeb.Router do
     pipe_through :api
 
     resources "/motorcycles", MotorcycleController, only: [:index, :show]
+
+    post "/quiz/match", QuizController, :match
+    get "/quiz/questions", QuizController, :questions
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

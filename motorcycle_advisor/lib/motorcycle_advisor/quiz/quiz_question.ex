@@ -2,6 +2,8 @@ defmodule MotorcycleAdvisor.Quiz.QuizQuestion do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, except: [:__meta__]}
+
   schema "quiz_questions" do
     field :key, :string
     field :label, :string

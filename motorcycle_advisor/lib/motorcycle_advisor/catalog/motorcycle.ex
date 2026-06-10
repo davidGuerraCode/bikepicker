@@ -2,6 +2,8 @@ defmodule MotorcycleAdvisor.Catalog.Motorcycle do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, except: [:__meta__]}
+
   schema "motorcycles" do
     field :brand, :string
     field :model, :string
