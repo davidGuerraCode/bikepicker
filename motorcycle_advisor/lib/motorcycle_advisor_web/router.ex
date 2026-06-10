@@ -7,6 +7,8 @@ defmodule MotorcycleAdvisorWeb.Router do
 
   scope "/api", MotorcycleAdvisorWeb do
     pipe_through :api
+
+    resources "/motorcycles", MotorcycleController, only: [:index, :show]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
