@@ -1,0 +1,21 @@
+{
+  "gap_threshold": 2,
+  "batch_size": 15,
+  "target_fields": [
+    "brand", "model", "year", "category", "price_cop", "engine_cc",
+    "power_hp", "weight_kg", "fuel_efficiency", "experience_level",
+    "use_case", "image_url", "description", "tags"
+  ],
+  "spec_sources": [
+    "https://www.auteco.com.co",
+    "https://www.akt.com.co",
+    "https://www.yamaha.com.co",
+    "https://www.suzuki.com.co",
+    "https://www.bajaj.com.co",
+    "https://triumphcolombia.com/"
+  ],
+  "price_sources": [
+    "https://listado.mercadolibre.com.co/motos",
+    "https://www.motos.com.co"
+  ]
+}

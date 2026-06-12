@@ -196,6 +196,117 @@ motorcycles = [
     use_case: "urban", image_url: "https://placehold.co/600x400?text=RE+Meteor+350",
     description: "Cruiser ligera retro, perfecta para el rider urbano.",
     tags: ["económica", "estilosa", "icónica", "principiante"]},
+
+  # ── Catalog expansion — fills category × experience × use_case gaps ─────────
+
+  # TOURING — beginner/intermediate/advanced, mixed/highway
+  %{brand: "Suzuki", model: "V-Strom 250SX", year: 2024, category: "touring",
+    price_cop: 14_500_000, engine_cc: 249, power_hp: 24, weight_kg: 166,
+    fuel_efficiency: Decimal.new("35.0"), experience_level: "beginner",
+    use_case: "mixed", image_url: "https://placehold.co/600x400?text=Suzuki+VStrom+250SX",
+    description: "Touring liviana ideal para iniciarse en viajes largos.",
+    tags: ["versátil", "cómoda", "principiante"]},
+
+  %{brand: "Kawasaki", model: "Versys-X 300", year: 2024, category: "touring",
+    price_cop: 16_000_000, engine_cc: 296, power_hp: 39, weight_kg: 179,
+    fuel_efficiency: Decimal.new("33.0"), experience_level: "beginner",
+    use_case: "highway", image_url: "https://placehold.co/600x400?text=Kawasaki+Versys-X+300",
+    description: "Touring compacta y cómoda para rutas de carretera.",
+    tags: ["cómoda", "versátil", "principiante"]},
+
+  %{brand: "Yamaha", model: "Tracer 7", year: 2024, category: "touring",
+    price_cop: 32_000_000, engine_cc: 689, power_hp: 73, weight_kg: 196,
+    fuel_efficiency: Decimal.new("25.0"), experience_level: "intermediate",
+    use_case: "mixed", image_url: "https://placehold.co/600x400?text=Yamaha+Tracer+7",
+    description: "Touring versátil con gran equilibrio entre ciudad y carretera.",
+    tags: ["cómoda", "versátil", "tecnológica"]},
+
+  %{brand: "Kawasaki", model: "Versys 650", year: 2024, category: "touring",
+    price_cop: 34_000_000, engine_cc: 649, power_hp: 67, weight_kg: 216,
+    fuel_efficiency: Decimal.new("23.0"), experience_level: "intermediate",
+    use_case: "highway", image_url: "https://placehold.co/600x400?text=Kawasaki+Versys+650",
+    description: "Touring intermedia pensada para devorar carretera con confort.",
+    tags: ["cómoda", "versátil", "tecnológica"]},
+
+  %{brand: "Triumph", model: "Tiger Sport 660", year: 2024, category: "touring",
+    price_cop: 38_000_000, engine_cc: 660, power_hp: 81, weight_kg: 206,
+    fuel_efficiency: Decimal.new("22.0"), experience_level: "advanced",
+    use_case: "mixed", image_url: "https://placehold.co/600x400?text=Triumph+Tiger+Sport+660",
+    description: "Touring deportiva con potencia y confort para riders exigentes.",
+    tags: ["potente", "cómoda", "tecnológica"]},
+
+  # ADVENTURE — fill beginner/highway and advanced/mixed
+  %{brand: "Royal Enfield", model: "Himalayan 411", year: 2024, category: "adventure",
+    price_cop: 17_000_000, engine_cc: 411, power_hp: 24, weight_kg: 199,
+    fuel_efficiency: Decimal.new("32.0"), experience_level: "beginner",
+    use_case: "highway", image_url: "https://placehold.co/600x400?text=RE+Himalayan+411",
+    description: "Adventure accesible y confiable para rutas de carretera.",
+    tags: ["versátil", "económica", "principiante"]},
+
+  %{brand: "Ducati", model: "Multistrada V2", year: 2024, category: "adventure",
+    price_cop: 65_000_000, engine_cc: 937, power_hp: 113, weight_kg: 215,
+    fuel_efficiency: Decimal.new("19.0"), experience_level: "advanced",
+    use_case: "mixed", image_url: "https://placehold.co/600x400?text=Ducati+Multistrada+V2",
+    description: "Adventure premium italiana para riders exigentes.",
+    tags: ["premium", "potente", "tecnológica"]},
+
+  # CRUISER — fill beginner/mixed, beginner/highway, advanced/mixed
+  %{brand: "Honda", model: "Rebel 300", year: 2024, category: "cruiser",
+    price_cop: 13_000_000, engine_cc: 286, power_hp: 27, weight_kg: 169,
+    fuel_efficiency: Decimal.new("38.0"), experience_level: "beginner",
+    use_case: "mixed", image_url: "https://placehold.co/600x400?text=Honda+Rebel+300",
+    description: "Cruiser ligera y moderna, perfecta para empezar con estilo.",
+    tags: ["ligera", "estilosa", "principiante"]},
+
+  %{brand: "Kawasaki", model: "Eliminator 400", year: 2024, category: "cruiser",
+    price_cop: 15_000_000, engine_cc: 451, power_hp: 45, weight_kg: 176,
+    fuel_efficiency: Decimal.new("28.0"), experience_level: "beginner",
+    use_case: "highway", image_url: "https://placehold.co/600x400?text=Kawasaki+Eliminator+400",
+    description: "Cruiser moderna y cómoda para carretera.",
+    tags: ["cómoda", "estilosa", "principiante"]},
+
+  %{brand: "Indian", model: "Scout Bobber", year: 2024, category: "cruiser",
+    price_cop: 58_000_000, engine_cc: 1133, power_hp: 78, weight_kg: 256,
+    fuel_efficiency: Decimal.new("18.0"), experience_level: "advanced",
+    use_case: "mixed", image_url: "https://placehold.co/600x400?text=Indian+Scout+Bobber",
+    description: "Cruiser icónica con carácter y presencia para riders avanzados.",
+    tags: ["icónica", "premium", "potente"]},
+
+  # Additional coverage — naked/scooter/offroad/adventure gaps
+  %{brand: "Triumph", model: "Trident 660", year: 2024, category: "naked",
+    price_cop: 35_000_000, engine_cc: 660, power_hp: 80, weight_kg: 188,
+    fuel_efficiency: Decimal.new("24.0"), experience_level: "advanced",
+    use_case: "highway", image_url: "https://placehold.co/600x400?text=Triumph+Trident+660",
+    description: "Naked premium con motor de tres cilindros y carácter en carretera.",
+    tags: ["potente", "tecnológica", "estilosa"]},
+
+  %{brand: "Honda", model: "Forza 350", year: 2024, category: "scooter",
+    price_cop: 17_000_000, engine_cc: 330, power_hp: 29, weight_kg: 181,
+    fuel_efficiency: Decimal.new("32.0"), experience_level: "intermediate",
+    use_case: "urban", image_url: "https://placehold.co/600x400?text=Honda+Forza+350",
+    description: "Maxiscooter tecnológico y cómodo para el día a día.",
+    tags: ["tecnológica", "cómoda", "práctica"]},
+
+  %{brand: "Husqvarna", model: "FE 350", year: 2024, category: "offroad",
+    price_cop: 30_000_000, engine_cc: 350, power_hp: 43, weight_kg: 110,
+    fuel_efficiency: Decimal.new("21.0"), experience_level: "intermediate",
+    use_case: "offroad", image_url: "https://placehold.co/600x400?text=Husqvarna+FE+350",
+    description: "Enduro de competición con tecnología de punta.",
+    tags: ["potente", "offroad", "tecnológica"]},
+
+  %{brand: "Kawasaki", model: "KLX 300", year: 2024, category: "adventure",
+    price_cop: 14_000_000, engine_cc: 292, power_hp: 27, weight_kg: 142,
+    fuel_efficiency: Decimal.new("30.0"), experience_level: "beginner",
+    use_case: "offroad", image_url: "https://placehold.co/600x400?text=Kawasaki+KLX+300",
+    description: "Adventure ligera ideal para iniciarse en el off-road.",
+    tags: ["ligera", "offroad", "principiante"]},
+
+  %{brand: "Yamaha", model: "MT-03", year: 2024, category: "naked",
+    price_cop: 18_000_000, engine_cc: 321, power_hp: 42, weight_kg: 168,
+    fuel_efficiency: Decimal.new("30.0"), experience_level: "beginner",
+    use_case: "mixed", image_url: "https://placehold.co/600x400?text=Yamaha+MT-03",
+    description: "Naked ágil y divertida para iniciarse con estilo deportivo.",
+    tags: ["deportiva", "ágil", "principiante"]},
 ]
 
 Enum.each(motorcycles, fn attrs ->

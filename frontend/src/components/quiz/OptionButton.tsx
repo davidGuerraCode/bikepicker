@@ -10,15 +10,25 @@ export function OptionButton({ icon, label, description, selected, onClick }: Pr
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left px-5 py-4 rounded-xl border-2 transition-all ${
+      className={`w-full text-left px-5 py-4 flex items-start gap-4 border-l-4 transition-colors ${
         selected
-          ? 'border-orange-500 bg-orange-500/10 text-white'
-          : 'border-gray-700 bg-gray-800 text-gray-300 hover:border-gray-500 hover:bg-gray-750'
+          ? 'border-signal bg-panel-2'
+          : 'border-line bg-panel hover:border-dim hover:bg-panel-2'
       }`}
     >
-      <span className="text-2xl mr-3">{icon}</span>
-      <span className="font-semibold">{label}</span>
-      <p className="text-sm text-gray-400 mt-1 ml-9">{description}</p>
+      <span className={`font-stat text-2xl shrink-0 ${selected ? 'text-signal' : 'text-dim'}`}>
+        {icon}
+      </span>
+      <span>
+        <span
+          className={`font-display uppercase tracking-wide block ${
+            selected ? 'text-paper' : 'text-paper/85'
+          }`}
+        >
+          {label}
+        </span>
+        <span className="text-sm text-dim">{description}</span>
+      </span>
     </button>
   )
 }

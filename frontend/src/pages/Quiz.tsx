@@ -27,18 +27,22 @@ export function Quiz() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <p className="text-gray-400 text-lg">Cargando preguntas…</p>
+      <div className="min-h-screen bg-asphalt text-paper flex items-center justify-center">
+        <p className="font-stat text-dim text-sm tracking-widest animate-pulse">CARGANDO PREGUNTAS…</p>
       </div>
     )
   }
 
   if (isMatching) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-asphalt text-paper flex items-center justify-center">
         <div className="text-center">
-          <div className="text-5xl mb-4 animate-bounce">🏍️</div>
-          <p className="text-gray-300 text-lg">Buscando tu moto ideal…</p>
+          <p className="font-display uppercase text-3xl font-semibold mb-3 text-signal">
+            Calculando
+          </p>
+          <p className="font-stat text-dim text-sm tracking-widest animate-pulse">
+            BUSCANDO TU MOTO IDEAL…
+          </p>
         </div>
       </div>
     )
@@ -49,29 +53,30 @@ export function Quiz() {
   const progress = ((currentIndex) / totalQuestions) * 100
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-asphalt text-paper flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg">
         {/* Progress */}
-        <div className="mb-8">
-          <div className="flex justify-between text-sm text-gray-400 mb-2">
-            <span>Pregunta {currentIndex + 1} de {totalQuestions}</span>
-            <span>{Math.round(progress)}%</span>
+        <div className="mb-10">
+          <div className="flex justify-between items-baseline mb-2">
+            <span className="font-stat text-signal text-sm tracking-widest">
+              {String(currentIndex + 1).padStart(2, '0')} / {String(totalQuestions).padStart(2, '0')}
+            </span>
+            <span className="font-stat text-dim text-xs">{Math.round(progress)}%</span>
           </div>
-          <div className="h-1.5 bg-gray-700 rounded-full">
-            <div
-              className="h-full bg-orange-500 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
+          <div className="h-2 bg-panel flex gap-1">
+            {Array.from({ length: totalQuestions }).map((_, i) => (
+              <div key={i} className={`flex-1 ${i <= currentIndex ? 'bg-signal' : 'bg-line'}`} />
+            ))}
           </div>
         </div>
 
         {/* Question */}
-        <h2 className="text-2xl font-bold text-white mb-6">
+        <h2 className="font-display uppercase text-3xl font-semibold mb-8 leading-tight">
           {currentQuestion.label}
         </h2>
 
         {/* Options */}
-        <div className="flex flex-col gap-3 mb-8">
+        <div className="flex flex-col gap-3 mb-10">
           {currentQuestion.options.items.map(opt => (
             <OptionButton
               key={opt.value}
@@ -89,7 +94,7 @@ export function Quiz() {
           {currentIndex > 0 && (
             <button
               onClick={goBack}
-              className="flex-1 py-3 rounded-xl border border-gray-700 text-gray-300 hover:border-gray-500 transition-colors"
+              className="cut-corner-sm flex-1 py-3 border border-line text-dim hover:text-paper hover:border-dim font-display uppercase tracking-wide transition-colors"
             >
               ← Atrás
             </button>
@@ -97,7 +102,7 @@ export function Quiz() {
           <button
             onClick={goForward}
             disabled={!currentAnswer}
-            className="flex-1 py-3 rounded-xl bg-orange-500 hover:bg-orange-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold transition-colors"
+            className="cut-corner-sm flex-1 py-3 bg-signal hover:bg-paper disabled:opacity-30 disabled:cursor-not-allowed text-asphalt font-display font-semibold uppercase tracking-wide transition-colors"
           >
             {currentIndex === totalQuestions - 1 ? 'Ver resultados' : 'Siguiente →'}
           </button>

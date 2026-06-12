@@ -1,1 +1,71 @@
 @import "tailwindcss";
+
+@theme {
+  --font-display: "Oswald", sans-serif;
+  --font-stat: "JetBrains Mono", monospace;
+  --font-body: "Work Sans", sans-serif;
+
+  --color-asphalt: #0c0c0e;
+  --color-panel: #19191c;
+  --color-panel-2: #232327;
+  --color-signal: #ffc700;
+  --color-accent: #ff4b1f;
+  --color-paper: #f4f1ea;
+  --color-line: #2e2e32;
+  --color-dim: #8d8d93;
+}
+
+html {
+  font-family: var(--font-body);
+}
+
+body {
+  background-color: var(--color-asphalt);
+  position: relative;
+}
+
+/* Grain overlay for texture/atmosphere */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Diagonal hazard stripes — used for accent bands */
+.hazard-stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-signal) 0px,
+    var(--color-signal) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+}
+
+/* Stamped-metal cut corners */
+.cut-corner {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 18px) 0,
+    100% 18px,
+    100% 100%,
+    18px 100%,
+    0 calc(100% - 18px)
+  );
+}
+
+.cut-corner-sm {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+}

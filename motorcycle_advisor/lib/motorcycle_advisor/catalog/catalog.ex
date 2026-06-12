@@ -26,6 +26,18 @@ defmodule MotorcycleAdvisor.Catalog do
     Repo.all(Motorcycle)
   end
 
+  def create_motorcycle(attrs) do
+    %Motorcycle{}
+    |> Motorcycle.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def motorcycle_exists?(brand, model, year) do
+    Repo.exists?(
+      from m in Motorcycle, where: m.brand == ^brand and m.model == ^model and m.year == ^year
+    )
+  end
+
   defp filter_by_category(query, nil), do: query
   defp filter_by_category(query, cat), do: where(query, [m], m.category == ^cat)
 
