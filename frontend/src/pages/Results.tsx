@@ -7,10 +7,10 @@ export function Results() {
 
   if (!recommendations.length) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-asphalt text-paper flex items-center justify-center px-4">
         <div className="text-center">
-          <p className="text-gray-400 mb-6">No hay resultados. Haz el quiz primero.</p>
-          <Link to="/quiz" className="text-orange-400 hover:text-orange-300 underline">
+          <p className="text-dim mb-6">No hay resultados. Haz el quiz primero.</p>
+          <Link to="/quiz" className="font-stat text-signal underline">
             Ir al quiz
           </Link>
         </div>
@@ -19,11 +19,14 @@ export function Results() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 px-4 py-12">
+    <div className="min-h-screen bg-asphalt text-paper px-4 py-12">
       <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-white mb-3">Tus motos ideales</h1>
-          <p className="text-gray-400">Basado en tus respuestas, estas son las mejores opciones para ti.</p>
+        <div className="mb-10">
+          <p className="font-stat text-signal text-sm tracking-[0.4em] mb-2">RESULTADOS</p>
+          <h1 className="font-display uppercase text-4xl sm:text-5xl font-bold mb-3">
+            Tus motos ideales
+          </h1>
+          <p className="text-dim">Basado en tus respuestas, estas son las mejores opciones para ti.</p>
         </div>
 
         <div className="flex flex-col gap-6">
@@ -35,7 +38,7 @@ export function Results() {
         <div className="text-center mt-10">
           <Link
             to="/quiz"
-            className="inline-block border border-gray-700 text-gray-300 hover:border-gray-500 px-8 py-3 rounded-xl transition-colors"
+            className="cut-corner-sm inline-block border border-line text-dim hover:text-paper hover:border-dim px-8 py-3 font-display uppercase tracking-wide transition-colors"
           >
             ← Volver a intentar
           </Link>
