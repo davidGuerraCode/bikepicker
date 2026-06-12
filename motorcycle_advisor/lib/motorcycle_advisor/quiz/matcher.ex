@@ -7,6 +7,48 @@ defmodule MotorcycleAdvisor.Quiz.Matcher do
 
   @style_tags %{"style" => ["estilosa", "icónica"], "tech" => ["tecnológica", "conectada"]}
 
+  @comfort_categories ["touring", "cruiser", "adventure"]
+
+  # Similarity between motorcycle categories, keyed by sorted {a, b} tuples.
+  # Diagonal = 1.0 (exact match). Off-diagonal reflects "family" closeness
+  # (e.g. touring/adventure/cruiser are comfort-oriented cousins).
+  @category_similarity %{
+    {"adventure", "adventure"} => 1.0,
+    {"cruiser", "cruiser"} => 1.0,
+    {"naked", "naked"} => 1.0,
+    {"offroad", "offroad"} => 1.0,
+    {"scooter", "scooter"} => 1.0,
+    {"sport", "sport"} => 1.0,
+    {"touring", "touring"} => 1.0,
+
+    {"adventure", "cruiser"} => 0.4,
+    {"adventure", "naked"} => 0.4,
+    {"adventure", "offroad"} => 0.6,
+    {"adventure", "scooter"} => 0.1,
+    {"adventure", "sport"} => 0.2,
+    {"adventure", "touring"} => 0.6,
+
+    {"cruiser", "naked"} => 0.3,
+    {"cruiser", "offroad"} => 0.1,
+    {"cruiser", "scooter"} => 0.2,
+    {"cruiser", "sport"} => 0.1,
+    {"cruiser", "touring"} => 0.6,
+
+    {"naked", "offroad"} => 0.2,
+    {"naked", "scooter"} => 0.3,
+    {"naked", "sport"} => 0.6,
+    {"naked", "touring"} => 0.3,
+
+    {"offroad", "scooter"} => 0.1,
+    {"offroad", "sport"} => 0.1,
+    {"offroad", "touring"} => 0.3,
+
+    {"scooter", "sport"} => 0.1,
+    {"scooter", "touring"} => 0.2,
+
+    {"sport", "touring"} => 0.1
+  }
+
   @reason_templates %{
     use_case: %{
       "urban" => "Ideal para moverse en ciudad",
@@ -64,11 +106,11 @@ defmodule MotorcycleAdvisor.Quiz.Matcher do
   end
 
   defp compute_score(moto, answers) do
-    use_case_score = score_use_case(moto, answers["use_case"]) * 0.30
-    budget_score = score_budget(moto, answers["budget"]) * 0.25
-    experience_score = score_experience(moto, answers["experience"]) * 0.25
+    use_case_score = score_use_case(moto, answers["use_case"]) * 0.25
+    budget_score = score_budget(moto, answers["budget"]) * 0.20
+    experience_score = score_experience(moto, answers["experience"]) * 0.20
     priority_score = score_priority(moto, answers["priority"]) * 0.10
-    category_score = score_category(moto, answers["category"]) * 0.10
+    category_score = score_category(moto, answers["category"]) * 0.25
 
     total = round((use_case_score + budget_score + experience_score + priority_score + category_score) * 100)
 
@@ -109,7 +151,12 @@ defmodule MotorcycleAdvisor.Quiz.Matcher do
     score_numeric(moto.power_hp, 10, 160)
   end
   defp score_priority(moto, "comfort") do
-    if moto.weight_kg, do: 1.0 - score_numeric(moto.weight_kg, 80, 300), else: 0.0
+    weight_score =
+      if moto.weight_kg, do: 1.0 - score_numeric(moto.weight_kg, 80, 300), else: 0.0
+
+    category_bonus = if moto.category in @comfort_categories, do: 1.0, else: 0.0
+
+    0.6 * weight_score + 0.4 * category_bonus
   end
   defp score_priority(moto, priority) when priority in ["style", "tech"] do
     target_tags = Map.get(@style_tags, priority, [])
@@ -118,9 +165,14 @@ defmodule MotorcycleAdvisor.Quiz.Matcher do
   defp score_priority(_, _), do: 0.0
 
   defp score_category(moto, answer) when is_binary(answer) do
-    if moto.category == answer, do: 1.0, else: 0.0
+    category_similarity(moto.category, answer)
   end
   defp score_category(_, _), do: 0.0
+
+  defp category_similarity(a, b) do
+    key = if a <= b, do: {a, b}, else: {b, a}
+    Map.get(@category_similarity, key, 0.0)
+  end
 
   defp score_numeric(nil, _, _), do: 0.0
   defp score_numeric(value, min, max) do
