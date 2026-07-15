@@ -49,7 +49,7 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.ImportLive do
                   type="button"
                   phx-click="cancel_upload"
                   phx-value-ref={entry.ref}
-                  class="ml-2 text-red-500 hover:text-red-700"
+                  class="ml-2 text-red-500 hover:text-red-700 cursor-pointer"
                 >
                   ✕
                 </button>

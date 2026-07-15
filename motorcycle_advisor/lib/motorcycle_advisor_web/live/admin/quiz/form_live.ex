@@ -105,7 +105,7 @@ defmodule MotorcycleAdvisorWeb.Admin.Quiz.FormLive do
                       type="button"
                       phx-click="remove_option"
                       phx-value-index={idx}
-                      class="text-red-500 hover:text-red-700 px-1"
+                      class="text-red-500 hover:text-red-700 px-1 cursor-pointer"
                     >
                       ✕
                     </button>

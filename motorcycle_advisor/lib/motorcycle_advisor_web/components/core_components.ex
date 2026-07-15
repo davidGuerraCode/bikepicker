@@ -66,7 +66,7 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
+        "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer",
         @variant == "primary" && "bg-blue-600 text-white hover:bg-blue-700",
         @variant == "secondary" &&
           "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 dark:bg-[#1a1d27] dark:text-slate-300 dark:border-[#2a2e3e] dark:hover:bg-[#22263a]",
