@@ -30,17 +30,15 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.IndexLive do
         </:actions>
       </.page_header>
 
-      <div class="flex gap-3 mb-4">
+      <form phx-change="filter" class="flex gap-3 mb-4">
         <input
           type="text"
           placeholder="Search brand or model..."
           value={@search}
-          phx-change="search"
           name="search"
           class="block w-64 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100 dark:placeholder-slate-500"
         />
         <select
-          phx-change="filter_category"
           name="category"
           class="block rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100"
         >
@@ -48,7 +46,7 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.IndexLive do
             {if cat == "", do: "All categories", else: String.capitalize(cat)}
           </option>
         </select>
-      </div>
+      </form>
 
       <.table id="motorcycles" rows={filtered_bikes(@bikes, @search, @category_filter)} row_id={fn m -> "moto-#{m.id}" end}>
         <:col :let={m} label="Image">
@@ -112,12 +110,8 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.IndexLive do
     """
   end
 
-  def handle_event("search", %{"search" => term}, socket) do
-    {:noreply, assign(socket, search: term)}
-  end
-
-  def handle_event("filter_category", %{"category" => cat}, socket) do
-    {:noreply, assign(socket, category_filter: cat)}
+  def handle_event("filter", %{"search" => search, "category" => category}, socket) do
+    {:noreply, assign(socket, search: search, category_filter: category)}
   end
 
   def handle_event("toggle_active", %{"id" => id}, socket) do
