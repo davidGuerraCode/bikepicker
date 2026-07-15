@@ -43,6 +43,7 @@ defmodule MotorcycleAdvisor.MixProject do
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.13"},
       {:postgrex, ">= 0.0.0"},
+      {:phoenix_live_view, "~> 1.0"},
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:swoosh, "~> 1.16"},
       {:req, "~> 0.5"},
@@ -53,7 +54,9 @@ defmodule MotorcycleAdvisor.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
-      {:cors_plug, "~> 3.0"}
+      {:cors_plug, "~> 3.0"},
+      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
+      {:esbuild, "~> 0.9", runtime: Mix.env() == :dev}
     ]
   end
 
@@ -69,7 +72,13 @@ defmodule MotorcycleAdvisor.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
+      precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"],
+      "assets.build": ["tailwind motorcycle_advisor", "esbuild motorcycle_advisor"],
+      "assets.deploy": [
+        "tailwind motorcycle_advisor --minify",
+        "esbuild motorcycle_advisor --minify",
+        "phx.digest"
+      ]
     ]
   end
 end

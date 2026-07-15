@@ -20,32 +20,26 @@ defmodule MotorcycleAdvisor.Quiz.Matcher do
     {"scooter", "scooter"} => 1.0,
     {"sport", "sport"} => 1.0,
     {"touring", "touring"} => 1.0,
-
     {"adventure", "cruiser"} => 0.4,
     {"adventure", "naked"} => 0.4,
     {"adventure", "offroad"} => 0.6,
     {"adventure", "scooter"} => 0.1,
     {"adventure", "sport"} => 0.2,
     {"adventure", "touring"} => 0.6,
-
     {"cruiser", "naked"} => 0.3,
     {"cruiser", "offroad"} => 0.1,
     {"cruiser", "scooter"} => 0.2,
     {"cruiser", "sport"} => 0.1,
     {"cruiser", "touring"} => 0.6,
-
     {"naked", "offroad"} => 0.2,
     {"naked", "scooter"} => 0.3,
     {"naked", "sport"} => 0.6,
     {"naked", "touring"} => 0.3,
-
     {"offroad", "scooter"} => 0.1,
     {"offroad", "sport"} => 0.1,
     {"offroad", "touring"} => 0.3,
-
     {"scooter", "sport"} => 0.1,
     {"scooter", "touring"} => 0.2,
-
     {"sport", "touring"} => 0.1
   }
 
@@ -112,7 +106,10 @@ defmodule MotorcycleAdvisor.Quiz.Matcher do
     priority_score = score_priority(moto, answers["priority"]) * 0.10
     category_score = score_category(moto, answers["category"]) * 0.25
 
-    total = round((use_case_score + budget_score + experience_score + priority_score + category_score) * 100)
+    total =
+      round(
+        (use_case_score + budget_score + experience_score + priority_score + category_score) * 100
+      )
 
     partials = %{
       "use_case" => use_case_score,
@@ -128,6 +125,7 @@ defmodule MotorcycleAdvisor.Quiz.Matcher do
   defp score_use_case(moto, answer) when is_binary(answer) do
     if moto.use_case == answer, do: 1.0, else: 0.0
   end
+
   defp score_use_case(_, _), do: 0.0
 
   defp score_budget(moto, answer) when is_binary(answer) do
@@ -137,19 +135,23 @@ defmodule MotorcycleAdvisor.Quiz.Matcher do
       _ -> 0.0
     end
   end
+
   defp score_budget(_, _), do: 0.0
 
   defp score_experience(moto, answer) when is_binary(answer) do
     if moto.experience_level == answer, do: 1.0, else: 0.0
   end
+
   defp score_experience(_, _), do: 0.0
 
   defp score_priority(moto, "economy") do
     score_numeric(moto.fuel_efficiency && Decimal.to_float(moto.fuel_efficiency), 20.0, 55.0)
   end
+
   defp score_priority(moto, "power") do
     score_numeric(moto.power_hp, 10, 160)
   end
+
   defp score_priority(moto, "comfort") do
     weight_score =
       if moto.weight_kg, do: 1.0 - score_numeric(moto.weight_kg, 80, 300), else: 0.0
@@ -158,15 +160,18 @@ defmodule MotorcycleAdvisor.Quiz.Matcher do
 
     0.6 * weight_score + 0.4 * category_bonus
   end
+
   defp score_priority(moto, priority) when priority in ["style", "tech"] do
     target_tags = Map.get(@style_tags, priority, [])
     if Enum.any?(moto.tags, &(&1 in target_tags)), do: 1.0, else: 0.0
   end
+
   defp score_priority(_, _), do: 0.0
 
   defp score_category(moto, answer) when is_binary(answer) do
     category_similarity(moto.category, answer)
   end
+
   defp score_category(_, _), do: 0.0
 
   defp category_similarity(a, b) do
@@ -175,6 +180,7 @@ defmodule MotorcycleAdvisor.Quiz.Matcher do
   end
 
   defp score_numeric(nil, _, _), do: 0.0
+
   defp score_numeric(value, min, max) do
     clamped = max(min, min(max, value))
     (clamped - min) / (max - min)
@@ -183,5 +189,6 @@ defmodule MotorcycleAdvisor.Quiz.Matcher do
   defp get_reason(criterion, answer) when is_binary(answer) do
     get_in(@reason_templates, [String.to_existing_atom(criterion), answer])
   end
+
   defp get_reason(_, _), do: nil
 end

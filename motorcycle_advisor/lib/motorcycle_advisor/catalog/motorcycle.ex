@@ -19,12 +19,23 @@ defmodule MotorcycleAdvisor.Catalog.Motorcycle do
     field :image_url, :string
     field :description, :string
     field :tags, {:array, :string}, default: []
+    field :active, :boolean, default: true
 
     timestamps()
   end
 
-  @required [:brand, :model, :year, :category, :price_cop, :engine_cc, :image_url, :experience_level, :use_case]
-  @optional [:power_hp, :weight_kg, :fuel_efficiency, :description, :tags]
+  @required [
+    :brand,
+    :model,
+    :year,
+    :category,
+    :price_cop,
+    :engine_cc,
+    :image_url,
+    :experience_level,
+    :use_case
+  ]
+  @optional [:power_hp, :weight_kg, :fuel_efficiency, :description, :tags, :active]
 
   def changeset(motorcycle, attrs) do
     motorcycle

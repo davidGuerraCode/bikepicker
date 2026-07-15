@@ -1,8 +1,22 @@
 defmodule MotorcycleAdvisorWeb.Router do
   use MotorcycleAdvisorWeb, :router
+  import Phoenix.LiveView.Router
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_live_flash
+    plug :put_root_layout, {MotorcycleAdvisorWeb.Layouts, :root}
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+  end
+
+  pipeline :admin_auth do
+    plug MotorcycleAdvisorWeb.Plugs.BasicAuth
   end
 
   scope "/api", MotorcycleAdvisorWeb do
@@ -12,6 +26,22 @@ defmodule MotorcycleAdvisorWeb.Router do
 
     post "/quiz/match", QuizController, :match
     get "/quiz/questions", QuizController, :questions
+  end
+
+  scope "/admin", MotorcycleAdvisorWeb do
+    pipe_through [:browser, :admin_auth]
+
+    live_session :admin, root_layout: {MotorcycleAdvisorWeb.Layouts, :root} do
+      live "/", Admin.DashboardLive
+      live "/motorcycles", Admin.Motorcycles.IndexLive
+      live "/motorcycles/new", Admin.Motorcycles.FormLive, :new
+      live "/motorcycles/:id/edit", Admin.Motorcycles.FormLive, :edit
+      live "/motorcycles/import", Admin.Motorcycles.ImportLive
+      live "/quiz", Admin.Quiz.IndexLive
+      live "/quiz/new", Admin.Quiz.FormLive, :new
+      live "/quiz/:id/edit", Admin.Quiz.FormLive, :edit
+      live "/simulator", Admin.SimulatorLive
+    end
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

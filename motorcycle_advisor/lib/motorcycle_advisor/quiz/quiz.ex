@@ -21,4 +21,22 @@ defmodule MotorcycleAdvisor.Quiz do
     |> order_by([q], q.order)
     |> Repo.all()
   end
+
+  def get_question!(id), do: Repo.get!(QuizQuestion, id)
+
+  def create_question(attrs) do
+    %QuizQuestion{}
+    |> QuizQuestion.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_question(question, attrs) do
+    question
+    |> QuizQuestion.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_question(question) do
+    Repo.delete(question)
+  end
 end

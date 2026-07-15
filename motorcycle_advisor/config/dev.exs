@@ -24,10 +24,15 @@ config :motorcycle_advisor, MotorcycleAdvisorWeb.Endpoint,
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "OSQsm48+6Z3gMsxCtGTqYWoZ1x7ZZQj5VHyaYn6BG9cxmEnA+uCanhHzQzEyfEDb",
-  watchers: []
+  watchers: [
+    tailwind: {Tailwind, :install_and_run, [:motorcycle_advisor, ~w(--watch)]},
+    esbuild: {Esbuild, :install_and_run, [:motorcycle_advisor, ~w(--sourcemap=inline --watch)]}
+  ]
 
 # Enable dev routes for dashboard and mailbox
 config :motorcycle_advisor, dev_routes: true
+
+config :motorcycle_advisor, :admin_basic_auth, username: "admin", password: "admin"
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :default_formatter, format: "[$level] $message\n"

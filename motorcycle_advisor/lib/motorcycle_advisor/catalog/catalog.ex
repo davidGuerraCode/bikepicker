@@ -11,6 +11,7 @@ defmodule MotorcycleAdvisor.Catalog do
     offset = (page - 1) * per_page
 
     Motorcycle
+    |> where([m], m.active == true)
     |> filter_by_category(params["category"])
     |> filter_by_experience(params["experience_level"])
     |> filter_by_use_case(params["use_case"])
@@ -23,13 +24,38 @@ defmodule MotorcycleAdvisor.Catalog do
   def get_motorcycle!(id), do: Repo.get!(Motorcycle, id)
 
   def list_all_motorcycles do
-    Repo.all(Motorcycle)
+    Motorcycle
+    |> where([m], m.active == true)
+    |> Repo.all()
+  end
+
+  def list_for_admin(params \\ %{}) do
+    Motorcycle
+    |> filter_by_category(params["category"])
+    |> filter_by_experience(params["experience_level"])
+    |> filter_by_use_case(params["use_case"])
+    |> order_by([m], [m.brand, m.model])
+    |> Repo.all()
   end
 
   def create_motorcycle(attrs) do
     %Motorcycle{}
     |> Motorcycle.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def update_motorcycle(motorcycle, attrs) do
+    motorcycle
+    |> Motorcycle.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_motorcycle(motorcycle) do
+    Repo.delete(motorcycle)
+  end
+
+  def toggle_active(motorcycle) do
+    update_motorcycle(motorcycle, %{active: !motorcycle.active})
   end
 
   def motorcycle_exists?(brand, model, year) do

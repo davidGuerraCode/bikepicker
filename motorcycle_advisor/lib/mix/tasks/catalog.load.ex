@@ -47,14 +47,15 @@ defmodule Mix.Tasks.Catalog.Load do
 
     File.write!(@csv_path, CSV.dump_to_iodata([header | Enum.reverse(updated_rows)]))
 
-    Mix.shell().info(
-      "Loaded #{loaded}, skipped (duplicate) #{skipped}, errors #{errors}."
-    )
+    Mix.shell().info("Loaded #{loaded}, skipped (duplicate) #{skipped}, errors #{errors}.")
   end
 
   defp load_row(record) do
     if Catalog.motorcycle_exists?(record["brand"], record["model"], to_int(record["year"])) do
-      Mix.shell().info("SKIP (duplicate): #{record["brand"]} #{record["model"]} #{record["year"]}")
+      Mix.shell().info(
+        "SKIP (duplicate): #{record["brand"]} #{record["model"]} #{record["year"]}"
+      )
+
       :skipped
     else
       insert_row(record)
@@ -76,7 +77,10 @@ defmodule Mix.Tasks.Catalog.Load do
     end
   rescue
     e ->
-      Mix.shell().error("INVALID: #{record["brand"]} #{record["model"]} #{record["year"]} -> #{Exception.message(e)}")
+      Mix.shell().error(
+        "INVALID: #{record["brand"]} #{record["model"]} #{record["year"]} -> #{Exception.message(e)}"
+      )
+
       :error
   end
 

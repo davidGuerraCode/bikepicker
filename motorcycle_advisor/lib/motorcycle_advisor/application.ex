@@ -10,7 +10,8 @@ defmodule MotorcycleAdvisor.Application do
     children = [
       MotorcycleAdvisorWeb.Telemetry,
       MotorcycleAdvisor.Repo,
-      {DNSCluster, query: Application.get_env(:motorcycle_advisor, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:motorcycle_advisor, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: MotorcycleAdvisor.PubSub},
       # Start a worker by calling: MotorcycleAdvisor.Worker.start_link(arg)
       # {MotorcycleAdvisor.Worker, arg},

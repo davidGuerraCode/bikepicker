@@ -95,7 +95,13 @@ defmodule MotorcycleAdvisor.Quiz.MatcherTest do
         "category" => "naked"
       }
 
-      moto = moto(%{category: "naked", experience_level: "beginner", use_case: "urban", price_cop: 7_000_000})
+      moto =
+        moto(%{
+          category: "naked",
+          experience_level: "beginner",
+          use_case: "urban",
+          price_cop: 7_000_000
+        })
 
       [{_, _score, partials}] = Matcher.score_all([moto], answers)
       reasons = Matcher.explain_score(partials, answers)

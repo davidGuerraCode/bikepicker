@@ -1,0 +1,54 @@
+<div class="min-h-full">
+  <nav class="bg-gray-900">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-14 items-center justify-between">
+        <div class="flex items-center gap-6">
+          <span class="text-white font-bold text-sm tracking-wide">🏍️ BikePicker Admin</span>
+          <div class="flex gap-1">
+            <.link
+              navigate={~p"/admin"}
+              class={[
+                "px-3 py-1.5 rounded-md text-sm transition-colors",
+                if(@page == :dashboard, do: "bg-gray-700 text-white", else: "text-gray-300 hover:text-white hover:bg-gray-700")
+              ]}
+            >
+              Dashboard
+            </.link>
+            <.link
+              navigate={~p"/admin/motorcycles"}
+              class={[
+                "px-3 py-1.5 rounded-md text-sm transition-colors",
+                if(@page == :motorcycles, do: "bg-gray-700 text-white", else: "text-gray-300 hover:text-white hover:bg-gray-700")
+              ]}
+            >
+              Motorcycles
+            </.link>
+            <.link
+              navigate={~p"/admin/quiz"}
+              class={[
+                "px-3 py-1.5 rounded-md text-sm transition-colors",
+                if(@page == :quiz, do: "bg-gray-700 text-white", else: "text-gray-300 hover:text-white hover:bg-gray-700")
+              ]}
+            >
+              Quiz Questions
+            </.link>
+            <.link
+              navigate={~p"/admin/simulator"}
+              class={[
+                "px-3 py-1.5 rounded-md text-sm transition-colors",
+                if(@page == :simulator, do: "bg-gray-700 text-white", else: "text-gray-300 hover:text-white hover:bg-gray-700")
+              ]}
+            >
+              Simulator
+            </.link>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <.flash_group flash={@flash} />
+    {render_slot(@inner_block)}
+  </main>
+</div>
