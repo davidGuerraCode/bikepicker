@@ -54,16 +54,41 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
     """
   end
 
-  @doc "Primary action button."
+  @doc "Primary action button. Renders <.link> when navigate/patch/href is set, <button> otherwise."
   attr :type, :string, default: "button"
   attr :variant, :string, default: "primary", values: ["primary", "secondary", "danger", "ghost"]
   attr :class, :string, default: nil
-  attr :rest, :global, include: ~w(disabled href navigate patch method phx-click phx-target)
+  attr :navigate, :string, default: nil
+  attr :patch, :string, default: nil
+  attr :href, :any, default: nil
+
+  attr :rest, :global,
+    include: ~w(disabled method phx-click phx-target phx-value-id phx-window-keydown phx-key)
+
   slot :inner_block, required: true
 
   def button(assigns) do
     ~H"""
+    <.link
+      :if={@navigate || @patch || @href}
+      navigate={@navigate}
+      patch={@patch}
+      href={@href}
+      class={[
+        "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer",
+        @variant == "primary" && "bg-blue-600 text-white hover:bg-blue-700",
+        @variant == "secondary" &&
+          "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 dark:bg-[#1a1d27] dark:text-slate-300 dark:border-[#2a2e3e] dark:hover:bg-[#22263a]",
+        @variant == "danger" && "bg-red-600 text-white hover:bg-red-700",
+        @variant == "ghost" &&
+          "text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-[#22263a]",
+        @class
+      ]}
+    >
+      {render_slot(@inner_block)}
+    </.link>
     <button
+      :if={!@navigate && !@patch && !@href}
       type={@type}
       class={[
         "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer",
