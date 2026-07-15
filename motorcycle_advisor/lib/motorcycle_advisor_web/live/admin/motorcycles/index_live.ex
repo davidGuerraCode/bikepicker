@@ -37,12 +37,12 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.IndexLive do
           value={@search}
           phx-change="search"
           name="search"
-          class="block w-64 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          class="block w-64 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100 dark:placeholder-slate-500"
         />
         <select
           phx-change="filter_category"
           name="category"
-          class="block rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          class="block rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100"
         >
           <option :for={cat <- @categories} value={cat} selected={cat == @category_filter}>
             {if cat == "", do: "All categories", else: String.capitalize(cat)}
@@ -61,7 +61,7 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.IndexLive do
         </:col>
         <:col :let={m} label="Brand / Model">
           <div class="font-medium">{m.brand} {m.model}</div>
-          <div class="text-xs text-gray-400">{m.year}</div>
+          <div class="text-xs text-gray-400 dark:text-slate-500">{m.year}</div>
         </:col>
         <:col :let={m} label="Category">
           <.badge color={category_color(m.category)}>{m.category}</.badge>

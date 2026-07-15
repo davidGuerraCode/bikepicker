@@ -18,23 +18,23 @@ defmodule MotorcycleAdvisorWeb.Admin.SimulatorLive do
     ~H"""
     <Layouts.app flash={@flash} page={:simulator}>
       <.page_header title="Recommendation Simulator" />
-      <p class="text-sm text-gray-500 mb-6">
+      <p class="text-sm text-gray-500 mb-6 dark:text-slate-400">
         Pick answers below to see which motorcycles the matcher would recommend in real time.
       </p>
 
       <div class="grid grid-cols-2 gap-6">
         <div class="space-y-4">
-          <div :for={q <- @questions} class="bg-white rounded-lg border border-gray-200 p-4">
-            <p class="text-sm font-medium text-gray-900 mb-3">{q.label}</p>
+          <div :for={q <- @questions} class="bg-white rounded-lg border border-gray-200 p-4 dark:bg-[#1a1d27] dark:border-[#2a2e3e]">
+            <p class="text-sm font-medium text-gray-900 mb-3 dark:text-slate-100">{q.label}</p>
             <div class="space-y-1.5">
               <label
                 :for={opt <- question_options(q.options)}
                 class={[
                   "flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer text-sm transition-colors",
                   Map.get(@answers, q.key) == opt["value"] &&
-                    "bg-blue-50 border border-blue-200 text-blue-800",
+                    "bg-blue-50 border border-blue-200 text-blue-800 dark:bg-amber-950/30 dark:border-amber-400/40 dark:text-amber-300",
                   Map.get(@answers, q.key) != opt["value"] &&
-                    "border border-gray-200 hover:bg-gray-50"
+                    "border border-gray-200 hover:bg-gray-50 dark:border-[#2a2e3e] dark:hover:bg-[#22263a] dark:text-slate-300"
                 ]}
               >
                 <input
@@ -50,7 +50,7 @@ defmodule MotorcycleAdvisorWeb.Admin.SimulatorLive do
                 <span>{opt["icon"]}</span>
                 <div>
                   <span class="font-medium">{opt["label"]}</span>
-                  <span :if={opt["description"]} class="text-xs text-gray-500 ml-1">
+                  <span :if={opt["description"]} class="text-xs text-gray-500 ml-1 dark:text-slate-500">
                     — {opt["description"]}
                   </span>
                 </div>
@@ -68,12 +68,12 @@ defmodule MotorcycleAdvisorWeb.Admin.SimulatorLive do
         </div>
 
         <div>
-          <div :if={@results == [] && map_size(@answers) == 0} class="bg-gray-50 rounded-lg border border-dashed border-gray-300 p-8 text-center">
-            <p class="text-sm text-gray-400">Answer the questions to see recommendations.</p>
+          <div :if={@results == [] && map_size(@answers) == 0} class="bg-gray-50 rounded-lg border border-dashed border-gray-300 p-8 text-center dark:bg-[#1a1d27] dark:border-[#2a2e3e]">
+            <p class="text-sm text-gray-400 dark:text-slate-500">Answer the questions to see recommendations.</p>
           </div>
 
-          <div :if={@results == [] && map_size(@answers) > 0} class="bg-gray-50 rounded-lg border border-gray-200 p-8 text-center">
-            <p class="text-sm text-gray-500">
+          <div :if={@results == [] && map_size(@answers) > 0} class="bg-gray-50 rounded-lg border border-gray-200 p-8 text-center dark:bg-[#1a1d27] dark:border-[#2a2e3e]">
+            <p class="text-sm text-gray-500 dark:text-slate-400">
               Answer all {length(@questions)} questions to see results.
               ({map_size(@answers)}/{length(@questions)} answered)
             </p>
@@ -82,9 +82,9 @@ defmodule MotorcycleAdvisorWeb.Admin.SimulatorLive do
           <div :if={@results != []} class="space-y-4">
             <div
               :for={{result, rank} <- Enum.with_index(@results, 1)}
-              class="bg-white rounded-lg border border-gray-200 overflow-hidden"
+              class="bg-white rounded-lg border border-gray-200 overflow-hidden dark:bg-[#1a1d27] dark:border-[#2a2e3e]"
             >
-              <div class="flex items-center gap-3 p-4 border-b border-gray-100">
+              <div class="flex items-center gap-3 p-4 border-b border-gray-100 dark:border-[#2a2e3e]">
                 <span class={[
                   "flex items-center justify-center w-7 h-7 rounded-full text-sm font-bold",
                   rank == 1 && "bg-yellow-100 text-yellow-700",
@@ -94,16 +94,16 @@ defmodule MotorcycleAdvisorWeb.Admin.SimulatorLive do
                   {rank}
                 </span>
                 <div class="flex-1">
-                  <p class="font-semibold text-gray-900">
+                  <p class="font-semibold text-gray-900 dark:text-slate-100">
                     {result.motorcycle.brand} {result.motorcycle.model}
                   </p>
-                  <p class="text-xs text-gray-400">{result.motorcycle.year}</p>
+                  <p class="text-xs text-gray-400 dark:text-slate-500">{result.motorcycle.year}</p>
                 </div>
                 <div class="text-right">
-                  <p class="text-lg font-bold text-blue-600">
+                  <p class="text-lg font-bold text-blue-600 dark:text-amber-400">
                     {Float.round(result.score * 100, 1)}%
                   </p>
-                  <p class="text-xs text-gray-400">match score</p>
+                  <p class="text-xs text-gray-400 dark:text-slate-500">match score</p>
                 </div>
               </div>
               <div class="px-4 py-3 flex flex-wrap gap-1.5">
@@ -114,7 +114,7 @@ defmodule MotorcycleAdvisorWeb.Admin.SimulatorLive do
                 <.badge color="gray">{result.motorcycle.use_case}</.badge>
               </div>
               <ul :if={result.reasons != []} class="px-4 pb-3 space-y-1">
-                <li :for={reason <- result.reasons} class="text-xs text-gray-600 flex gap-1.5">
+                <li :for={reason <- result.reasons} class="text-xs text-gray-600 flex gap-1.5 dark:text-slate-400">
                   <span class="text-green-500 mt-0.5">✓</span>
                   {reason}
                 </li>

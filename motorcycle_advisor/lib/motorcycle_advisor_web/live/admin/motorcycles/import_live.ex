@@ -21,29 +21,29 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.ImportLive do
         </:actions>
       </.page_header>
 
-      <div class="bg-white rounded-lg border border-gray-200 p-6 max-w-4xl space-y-6">
+      <div class="bg-white rounded-lg border border-gray-200 p-6 max-w-4xl space-y-6 dark:bg-[#1a1d27] dark:border-[#2a2e3e]">
         <div :if={is_nil(@import_result)}>
-          <p class="text-sm text-gray-600 mb-4">
+          <p class="text-sm text-gray-600 mb-4 dark:text-slate-400">
             Upload a CSV file. Expected columns:
-            <code class="text-xs bg-gray-100 px-1 rounded">
+            <code class="text-xs bg-gray-100 px-1 rounded dark:bg-[#22263a] dark:text-slate-300">
               brand, model, year, category, engine_cc, power_hp, weight_kg, fuel_efficiency,
               experience_level, use_case, price_cop, image_url, description, tags, status
             </code>
-            . Only rows with <code class="text-xs bg-gray-100 px-1 rounded">status=approved</code>
+            . Only rows with <code class="text-xs bg-gray-100 px-1 rounded dark:bg-[#22263a] dark:text-slate-300">status=approved</code>
             will be imported.
           </p>
 
           <form phx-change="validate" phx-submit="parse" class="space-y-4">
             <div
-              class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 transition-colors"
+              class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 transition-colors dark:border-[#2a2e3e] dark:hover:border-amber-400/50"
               phx-drop-target={@uploads.csv.ref}
             >
-              <p class="text-gray-500 text-sm mb-2">Drop a CSV file here, or</p>
-              <label class="cursor-pointer text-blue-600 text-sm font-medium hover:underline">
+              <p class="text-gray-500 text-sm mb-2 dark:text-slate-400">Drop a CSV file here, or</p>
+              <label class="cursor-pointer text-blue-600 text-sm font-medium hover:underline dark:text-amber-400">
                 browse to upload
                 <.live_file_input upload={@uploads.csv} class="hidden" />
               </label>
-              <div :for={entry <- @uploads.csv.entries} class="mt-3 text-sm text-gray-700">
+              <div :for={entry <- @uploads.csv.entries} class="mt-3 text-sm text-gray-700 dark:text-slate-300">
                 📄 {entry.client_name} ({Float.round(entry.client_size / 1024, 1)} KB)
                 <button
                   type="button"
@@ -72,22 +72,22 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.ImportLive do
           </h3>
 
           <div class="overflow-x-auto">
-            <table class="min-w-full text-xs divide-y divide-gray-200">
-              <thead class="bg-gray-50">
+            <table class="min-w-full text-xs divide-y divide-gray-200 dark:divide-[#2a2e3e]">
+              <thead class="bg-gray-50 dark:bg-[#22263a]">
                 <tr>
-                  <th class="px-2 py-2 text-left font-medium text-gray-500">#</th>
-                  <th class="px-2 py-2 text-left font-medium text-gray-500">Brand / Model</th>
-                  <th class="px-2 py-2 text-left font-medium text-gray-500">Category</th>
-                  <th class="px-2 py-2 text-left font-medium text-gray-500">Experience</th>
-                  <th class="px-2 py-2 text-left font-medium text-gray-500">Status</th>
+                  <th class="px-2 py-2 text-left font-medium text-gray-500 dark:text-slate-400">#</th>
+                  <th class="px-2 py-2 text-left font-medium text-gray-500 dark:text-slate-400">Brand / Model</th>
+                  <th class="px-2 py-2 text-left font-medium text-gray-500 dark:text-slate-400">Category</th>
+                  <th class="px-2 py-2 text-left font-medium text-gray-500 dark:text-slate-400">Experience</th>
+                  <th class="px-2 py-2 text-left font-medium text-gray-500 dark:text-slate-400">Status</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-100">
+              <tbody class="divide-y divide-gray-100 dark:divide-[#2a2e3e]">
                 <tr
                   :for={{row, idx} <- Enum.with_index(@parsed_rows, 1)}
-                  class={if match?({:error, _}, row), do: "bg-red-50", else: "bg-green-50"}
+                  class={if match?({:error, _}, row), do: "bg-red-50 dark:bg-red-950/20", else: "bg-green-50 dark:bg-green-950/20"}
                 >
-                  <td class="px-2 py-1.5 text-gray-400">{idx}</td>
+                  <td class="px-2 py-1.5 text-gray-400 dark:text-slate-500">{idx}</td>
                   <td class="px-2 py-1.5">
                     {case row do
                       {:ok, attrs} -> "#{attrs["brand"]} #{attrs["model"]} #{attrs["year"]}"
@@ -107,8 +107,8 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.ImportLive do
                     end}
                   </td>
                   <td class="px-2 py-1.5">
-                    <span :if={match?({:ok, _}, row)} class="text-green-700 font-medium">✓ valid</span>
-                    <span :if={match?({:error, _}, row)} class="text-red-600">
+                    <span :if={match?({:ok, _}, row)} class="text-green-700 font-medium dark:text-green-400">✓ valid</span>
+                    <span :if={match?({:error, _}, row)} class="text-red-600 dark:text-red-400">
                       ✗ {elem(row, 1)}
                     </span>
                   </td>
@@ -125,14 +125,14 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.ImportLive do
             <.button phx-click="reset" variant="secondary">Start Over</.button>
           </div>
 
-          <p :if={Enum.any?(@parsed_rows, &match?({:error, _}, &1))} class="text-xs text-red-600 mt-2">
+          <p :if={Enum.any?(@parsed_rows, &match?({:error, _}, &1))} class="text-xs text-red-600 mt-2 dark:text-red-400">
             Fix all errors before importing.
           </p>
         </div>
 
         <div :if={@import_result} class="space-y-3">
-          <div class="p-4 bg-green-50 rounded-md">
-            <p class="text-sm font-medium text-green-800">
+          <div class="p-4 bg-green-50 rounded-md dark:bg-green-950/30">
+            <p class="text-sm font-medium text-green-800 dark:text-green-300">
               Import complete: {@import_result.inserted} inserted,
               {@import_result.skipped} skipped (duplicates),
               {@import_result.errors} errors

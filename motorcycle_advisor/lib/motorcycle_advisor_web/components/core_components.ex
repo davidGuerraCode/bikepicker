@@ -26,8 +26,10 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
       role="alert"
       class={[
         "fixed top-4 right-4 z-50 max-w-sm rounded-lg px-4 py-3 shadow-md text-sm",
-        @kind == :info && "bg-blue-50 text-blue-800 border border-blue-200",
-        @kind == :error && "bg-red-50 text-red-800 border border-red-200"
+        @kind == :info &&
+          "bg-blue-50 text-blue-800 border border-blue-200 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-800",
+        @kind == :error &&
+          "bg-red-50 text-red-800 border border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800"
       ]}
       phx-click={JS.hide(to: "#flash-#{@kind}")}
       id={"flash-#{@kind}"}
@@ -44,7 +46,7 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
   def page_header(assigns) do
     ~H"""
     <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-bold text-gray-900">{@title}</h1>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-slate-100">{@title}</h1>
       <div class="flex gap-2">
         {render_slot(@actions)}
       </div>
@@ -66,9 +68,11 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
       class={[
         "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
         @variant == "primary" && "bg-blue-600 text-white hover:bg-blue-700",
-        @variant == "secondary" && "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50",
+        @variant == "secondary" &&
+          "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 dark:bg-[#1a1d27] dark:text-slate-300 dark:border-[#2a2e3e] dark:hover:bg-[#22263a]",
         @variant == "danger" && "bg-red-600 text-white hover:bg-red-700",
-        @variant == "ghost" && "text-gray-600 hover:text-gray-900 hover:bg-gray-100",
+        @variant == "ghost" &&
+          "text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-[#22263a]",
         @class
       ]}
       {@rest}
@@ -86,13 +90,13 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
     ~H"""
     <span class={[
       "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium",
-      @color == "gray" && "bg-gray-100 text-gray-700",
-      @color == "blue" && "bg-blue-100 text-blue-700",
-      @color == "green" && "bg-green-100 text-green-700",
-      @color == "red" && "bg-red-100 text-red-700",
-      @color == "yellow" && "bg-yellow-100 text-yellow-700",
-      @color == "purple" && "bg-purple-100 text-purple-700",
-      @color == "orange" && "bg-orange-100 text-orange-700"
+      @color == "gray" && "bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300",
+      @color == "blue" && "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+      @color == "green" && "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+      @color == "red" && "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+      @color == "yellow" && "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300",
+      @color == "purple" && "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+      @color == "orange" && "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300"
     ]}>
       {render_slot(@inner_block)}
     </span>
@@ -112,13 +116,13 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
 
   def table(assigns) do
     ~H"""
-    <div class="overflow-hidden rounded-lg border border-gray-200">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+    <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-[#2a2e3e]">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-[#2a2e3e]">
+        <thead class="bg-gray-50 dark:bg-[#22263a]">
           <tr>
             <th
               :for={col <- @col}
-              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-slate-500"
             >
               {col.label}
             </th>
@@ -127,13 +131,13 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
             </th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200" id={@id}>
+        <tbody class="bg-white divide-y divide-gray-200 dark:bg-[#1a1d27] dark:divide-[#2a2e3e]" id={@id}>
           <tr
             :for={row <- @rows}
             id={@row_id && @row_id.(row)}
-            class="hover:bg-gray-50 transition-colors"
+            class="hover:bg-gray-50 transition-colors dark:hover:bg-[#22263a]"
           >
-            <td :for={col <- @col} class="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">
+            <td :for={col <- @col} class="px-4 py-3 text-sm text-gray-900 whitespace-nowrap dark:text-slate-100">
               {render_slot(col, row)}
             </td>
             <td :if={@action != []} class="px-4 py-3 text-sm text-right">
@@ -186,10 +190,10 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
         name={@name}
         value="true"
         checked={@value}
-        class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+        class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-[#2a2e3e] dark:bg-[#1a1d27]"
         {@rest}
       />
-      <label :if={@label} for={@id} class="text-sm font-medium text-gray-700">{@label}</label>
+      <label :if={@label} for={@id} class="text-sm font-medium text-gray-700 dark:text-slate-300">{@label}</label>
     </div>
     <.error :for={msg <- @errors}>{msg}</.error>
     """
@@ -198,14 +202,14 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
   def input(%{type: "select"} = assigns) do
     ~H"""
     <div class="space-y-1">
-      <label :if={@label} for={@id} class="block text-sm font-medium text-gray-700">
+      <label :if={@label} for={@id} class="block text-sm font-medium text-gray-700 dark:text-slate-300">
         {@label}<span :if={@required} class="text-red-500 ml-0.5">*</span>
       </label>
       <select
         id={@id}
         name={@name}
         class={[
-          "block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500",
+          "block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100",
           @errors != [] && "border-red-500",
           @class
         ]}
@@ -221,14 +225,14 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
   def input(%{type: "textarea"} = assigns) do
     ~H"""
     <div class="space-y-1">
-      <label :if={@label} for={@id} class="block text-sm font-medium text-gray-700">
+      <label :if={@label} for={@id} class="block text-sm font-medium text-gray-700 dark:text-slate-300">
         {@label}<span :if={@required} class="text-red-500 ml-0.5">*</span>
       </label>
       <textarea
         id={@id}
         name={@name}
         class={[
-          "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500",
+          "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100",
           @errors != [] && "border-red-500",
           @class
         ]}
@@ -242,7 +246,7 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
   def input(assigns) do
     ~H"""
     <div class="space-y-1">
-      <label :if={@label} for={@id} class="block text-sm font-medium text-gray-700">
+      <label :if={@label} for={@id} class="block text-sm font-medium text-gray-700 dark:text-slate-300">
         {@label}<span :if={@required} class="text-red-500 ml-0.5">*</span>
       </label>
       <input
@@ -251,7 +255,7 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
         name={@name}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500",
+          "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100",
           @errors != [] && "border-red-500",
           @class
         ]}
@@ -279,11 +283,11 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
     >
       <div class="flex min-h-full items-center justify-center p-4">
         <div class="fixed inset-0 bg-gray-500/75 transition-opacity" phx-click={hide_modal(@id)} />
-        <div class="relative z-10 w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-          <h3 :if={@title != []} class="text-base font-semibold text-gray-900 mb-2">
+        <div class="relative z-10 w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-[#1a1d27]">
+          <h3 :if={@title != []} class="text-base font-semibold text-gray-900 mb-2 dark:text-slate-100">
             {render_slot(@title)}
           </h3>
-          <div class="text-sm text-gray-600 mb-4">
+          <div class="text-sm text-gray-600 mb-4 dark:text-slate-400">
             {render_slot(@inner_block)}
           </div>
           <div class="flex justify-end gap-2">

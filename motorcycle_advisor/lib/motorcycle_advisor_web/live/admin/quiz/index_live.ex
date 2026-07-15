@@ -19,7 +19,7 @@ defmodule MotorcycleAdvisorWeb.Admin.Quiz.IndexLive do
       <.table id="questions" rows={@questions} row_id={fn q -> "question-#{q.id}" end}>
         <:col :let={q} label="Order">{q.order}</:col>
         <:col :let={q} label="Key">
-          <code class="text-xs bg-gray-100 px-1 rounded">{q.key}</code>
+          <code class="text-xs bg-gray-100 px-1 rounded dark:bg-[#22263a] dark:text-slate-300">{q.key}</code>
         </:col>
         <:col :let={q} label="Label">{q.label}</:col>
         <:col :let={q} label="Type">

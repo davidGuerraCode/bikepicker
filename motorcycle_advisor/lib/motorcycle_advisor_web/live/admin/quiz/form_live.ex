@@ -35,7 +35,7 @@ defmodule MotorcycleAdvisorWeb.Admin.Quiz.FormLive do
     <Layouts.app flash={@flash} page={:quiz}>
       <.page_header title={if @action == :new, do: "Add Question", else: "Edit Question"} />
 
-      <div class="bg-white rounded-lg border border-gray-200 p-6 max-w-2xl">
+      <div class="bg-white rounded-lg border border-gray-200 p-6 max-w-2xl dark:bg-[#1a1d27] dark:border-[#2a2e3e]">
         <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save" class="space-y-5">
           <div class="grid grid-cols-2 gap-4">
             <.input field={f[:key]} label="Key (unique identifier)" required />
@@ -50,7 +50,7 @@ defmodule MotorcycleAdvisorWeb.Admin.Quiz.FormLive do
 
           <div>
             <div class="flex items-center justify-between mb-2">
-              <label class="block text-sm font-medium text-gray-700">Options</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Options</label>
               <.button type="button" variant="secondary" phx-click="add_option">
                 + Add Option
               </.button>
@@ -59,47 +59,47 @@ defmodule MotorcycleAdvisorWeb.Admin.Quiz.FormLive do
             <div class="space-y-3">
               <div
                 :for={{opt, idx} <- Enum.with_index(@options)}
-                class="grid grid-cols-4 gap-2 p-3 bg-gray-50 rounded-md"
+                class="grid grid-cols-4 gap-2 p-3 bg-gray-50 rounded-md dark:bg-[#22263a]"
               >
                 <div>
-                  <label class="block text-xs font-medium text-gray-500 mb-1">Value</label>
+                  <label class="block text-xs font-medium text-gray-500 mb-1 dark:text-slate-400">Value</label>
                   <input
                     type="text"
                     name={"options[#{idx}][value]"}
                     value={opt["value"]}
                     placeholder="e.g. urban"
-                    class="block w-full rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none"
+                    class="block w-full rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100"
                   />
                 </div>
                 <div>
-                  <label class="block text-xs font-medium text-gray-500 mb-1">Label</label>
+                  <label class="block text-xs font-medium text-gray-500 mb-1 dark:text-slate-400">Label</label>
                   <input
                     type="text"
                     name={"options[#{idx}][label]"}
                     value={opt["label"]}
                     placeholder="Display text"
-                    class="block w-full rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none"
+                    class="block w-full rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100"
                   />
                 </div>
                 <div>
-                  <label class="block text-xs font-medium text-gray-500 mb-1">Description</label>
+                  <label class="block text-xs font-medium text-gray-500 mb-1 dark:text-slate-400">Description</label>
                   <input
                     type="text"
                     name={"options[#{idx}][description]"}
                     value={opt["description"]}
                     placeholder="Short description"
-                    class="block w-full rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none"
+                    class="block w-full rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100"
                   />
                 </div>
                 <div class="flex flex-col">
-                  <label class="block text-xs font-medium text-gray-500 mb-1">Icon</label>
+                  <label class="block text-xs font-medium text-gray-500 mb-1 dark:text-slate-400">Icon</label>
                   <div class="flex gap-1">
                     <input
                       type="text"
                       name={"options[#{idx}][icon]"}
                       value={opt["icon"]}
                       placeholder="🏙️"
-                      class="block w-full rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none"
+                      class="block w-full rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100"
                     />
                     <button
                       type="button"

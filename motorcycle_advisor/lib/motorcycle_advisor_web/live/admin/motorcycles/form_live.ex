@@ -34,7 +34,7 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.FormLive do
     <Layouts.app flash={@flash} page={:motorcycles}>
       <.page_header title={if @action == :new, do: "Add Motorcycle", else: "Edit Motorcycle"} />
 
-      <div class="bg-white rounded-lg border border-gray-200 p-6 max-w-3xl">
+      <div class="bg-white rounded-lg border border-gray-200 p-6 max-w-3xl dark:bg-[#1a1d27] dark:border-[#2a2e3e]">
         <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save" class="space-y-5">
           <div class="grid grid-cols-2 gap-4">
             <.input field={f[:brand]} label="Brand" required />
@@ -82,7 +82,7 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.FormLive do
               <img
                 src={@image_preview_url}
                 alt="Preview"
-                class="h-32 w-48 object-cover rounded-md border border-gray-200"
+                class="h-32 w-48 object-cover rounded-md border border-gray-200 dark:border-[#2a2e3e]"
                 onerror="this.style.display='none'"
               />
             </div>
