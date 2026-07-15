@@ -36,6 +36,7 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.IndexLive do
           placeholder="Search brand or model..."
           value={@search}
           name="search"
+          phx-debounce="500"
           class="block w-64 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-[#1a1d27] dark:border-[#2a2e3e] dark:text-slate-100 dark:placeholder-slate-500"
         />
         <select
