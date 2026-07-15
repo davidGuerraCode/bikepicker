@@ -38,6 +38,7 @@ defmodule MotorcycleAdvisorWeb.Admin.Quiz.IndexLive do
         :if={@confirm_delete_id}
         id="delete-question-modal"
         on_confirm={JS.push("delete", value: %{id: @confirm_delete_id})}
+        on_cancel={JS.push("cancel_delete")}
       >
         <:title>Delete Question</:title>
         This will permanently delete the question and cannot be undone.
@@ -50,6 +51,10 @@ defmodule MotorcycleAdvisorWeb.Admin.Quiz.IndexLive do
 
   def handle_event("confirm_delete", %{"id" => id}, socket) do
     {:noreply, assign(socket, confirm_delete_id: String.to_integer(id))}
+  end
+
+  def handle_event("cancel_delete", _params, socket) do
+    {:noreply, assign(socket, confirm_delete_id: nil)}
   end
 
   def handle_event("delete", %{"id" => id}, socket) do

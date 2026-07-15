@@ -268,6 +268,7 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
 
   attr :id, :string, required: true
   attr :on_confirm, JS, required: true
+  attr :on_cancel, JS, default: %JS{}
   slot :inner_block, required: true
   slot :title
   slot :confirm
@@ -282,7 +283,7 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
       class="hidden fixed inset-0 z-50 overflow-y-auto"
     >
       <div class="flex min-h-full items-center justify-center p-4">
-        <div class="fixed inset-0 bg-gray-500/75 transition-opacity" phx-click={hide_modal(@id)} />
+        <div class="fixed inset-0 bg-gray-500/75 transition-opacity" phx-click={hide_modal(@on_cancel, @id)} />
         <div class="relative z-10 w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-[#1a1d27]">
           <h3 :if={@title != []} class="text-base font-semibold text-gray-900 mb-2 dark:text-slate-100">
             {render_slot(@title)}
@@ -291,7 +292,7 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
             {render_slot(@inner_block)}
           </div>
           <div class="flex justify-end gap-2">
-            <.button :if={@cancel != []} variant="secondary" phx-click={hide_modal(@id)}>
+            <.button :if={@cancel != []} variant="secondary" phx-click={hide_modal(@on_cancel, @id)}>
               {render_slot(@cancel)}
             </.button>
             <.button variant="danger" phx-click={@on_confirm} phx-window-keydown={@on_confirm} phx-key="Enter">
@@ -309,8 +310,8 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
     |> JS.show(to: "##{id} [data-modal-overlay]")
   end
 
-  defp hide_modal(id) do
-    JS.hide(to: "##{id}")
+  defp hide_modal(js \\ %JS{}, id) do
+    JS.hide(js, to: "##{id}")
   end
 
   defp error(assigns) do
