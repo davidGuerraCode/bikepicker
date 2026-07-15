@@ -54,23 +54,23 @@ defmodule MotorcycleAdvisorWeb.Admin.Motorcycles.FormLive do
           </div>
 
           <div class="grid grid-cols-3 gap-4">
-            <.input field={f[:category]} label="Category" type="select" required>
+            <.input field={f[:category]} label="Category" type="select" required :let={val}>
               <option value="">Select...</option>
-              <option :for={cat <- ~w(naked sport cruiser adventure scooter touring offroad)} value={cat}>
+              <option :for={cat <- ~w(naked sport cruiser adventure scooter touring offroad)} value={cat} selected={val == cat}>
                 {String.capitalize(cat)}
               </option>
             </.input>
 
-            <.input field={f[:experience_level]} label="Experience Level" type="select" required>
+            <.input field={f[:experience_level]} label="Experience Level" type="select" required :let={val}>
               <option value="">Select...</option>
-              <option :for={level <- ~w(beginner intermediate advanced)} value={level}>
+              <option :for={level <- ~w(beginner intermediate advanced)} value={level} selected={val == level}>
                 {String.capitalize(level)}
               </option>
             </.input>
 
-            <.input field={f[:use_case]} label="Use Case" type="select" required>
+            <.input field={f[:use_case]} label="Use Case" type="select" required :let={val}>
               <option value="">Select...</option>
-              <option :for={uc <- ~w(urban highway mixed offroad track)} value={uc}>
+              <option :for={uc <- ~w(urban highway mixed offroad track)} value={uc} selected={val == uc}>
                 {String.capitalize(uc)}
               </option>
             </.input>

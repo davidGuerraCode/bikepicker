@@ -240,7 +240,7 @@ defmodule MotorcycleAdvisorWeb.CoreComponents do
         ]}
         {@rest}
       >
-        {render_slot(@inner_block)}
+        {render_slot(@inner_block, @value)}
       </select>
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>

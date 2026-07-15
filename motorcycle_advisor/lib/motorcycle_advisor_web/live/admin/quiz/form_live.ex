@@ -44,8 +44,8 @@ defmodule MotorcycleAdvisorWeb.Admin.Quiz.FormLive do
 
           <.input field={f[:label]} label="Question Label" required />
 
-          <.input field={f[:type]} label="Type" type="select" required>
-            <option value="single_choice">Single Choice</option>
+          <.input field={f[:type]} label="Type" type="select" required :let={val}>
+            <option value="single_choice" selected={val == "single_choice"}>Single Choice</option>
           </.input>
 
           <div>
