@@ -35,4 +35,19 @@ defmodule MotorcycleAdvisorWeb.ConnCase do
     MotorcycleAdvisor.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
+
+  @doc """
+  Registers a user and returns a conn with the Authorization bearer header set.
+  """
+  def register_and_authenticate_user(%{conn: conn}) do
+    {:ok, user} =
+      MotorcycleAdvisor.Accounts.register_user(%{
+        "email" => "user#{System.unique_integer([:positive])}@example.com",
+        "password" => "supersecret123"
+      })
+
+    token = MotorcycleAdvisor.Accounts.create_api_token(user)
+
+    %{conn: Plug.Conn.put_req_header(conn, "authorization", "Bearer " <> token), user: user}
+  end
 end

@@ -19,6 +19,10 @@ defmodule MotorcycleAdvisorWeb.Router do
     plug MotorcycleAdvisorWeb.Plugs.BasicAuth
   end
 
+  pipeline :api_auth do
+    plug MotorcycleAdvisorWeb.Plugs.RequireAuthenticatedApiUser
+  end
+
   scope "/api", MotorcycleAdvisorWeb do
     pipe_through :api
 
@@ -26,6 +30,33 @@ defmodule MotorcycleAdvisorWeb.Router do
 
     post "/quiz/match", QuizController, :match
     get "/quiz/questions", QuizController, :questions
+  end
+
+  scope "/api/auth", MotorcycleAdvisorWeb do
+    pipe_through :api
+
+    post "/register", AuthController, :register
+    post "/login", AuthController, :login
+  end
+
+  scope "/api/auth", MotorcycleAdvisorWeb do
+    pipe_through [:api, :api_auth]
+
+    get "/me", AuthController, :me
+    delete "/logout", AuthController, :logout
+  end
+
+  scope "/api/garage", MotorcycleAdvisorWeb do
+    pipe_through [:api, :api_auth]
+
+    resources "/bikes", GarageBikeController, except: [:new, :edit]
+    get "/bikes/:garage_bike_id/summary", GarageBikeController, :summary
+    get "/bikes/:garage_bike_id/expenses", GarageExpenseController, :index
+    post "/bikes/:garage_bike_id/expenses", GarageExpenseController, :create
+    patch "/expenses/:id", GarageExpenseController, :update
+    put "/expenses/:id", GarageExpenseController, :update
+    delete "/expenses/:id", GarageExpenseController, :delete
+    get "/summary", GarageStatsController, :summary
   end
 
   scope "/admin", MotorcycleAdvisorWeb do

@@ -55,6 +55,7 @@ defmodule MotorcycleAdvisor.MixProject do
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
       {:cors_plug, "~> 3.0"},
+      {:bcrypt_elixir, "~> 3.0"},
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:esbuild, "~> 0.9", runtime: Mix.env() == :dev}
     ]

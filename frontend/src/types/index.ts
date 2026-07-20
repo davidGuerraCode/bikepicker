@@ -41,3 +41,51 @@ export interface Recommendation {
   score: number
   reasons: string[]
 }
+
+export interface User {
+  id: number
+  email: string
+  inserted_at: string
+}
+
+export interface AuthResponse {
+  data: User
+  token: string
+}
+
+export type ExpenseCategory =
+  | 'oil_change'
+  | 'brake_pads'
+  | 'chain'
+  | 'tires'
+  | 'insurance'
+  | 'registration'
+  | 'mod'
+  | 'other'
+
+export interface GarageBike {
+  id: number
+  nickname: string | null
+  brand: string
+  model: string
+  year: number | null
+  inserted_at: string
+  updated_at: string
+}
+
+export interface Expense {
+  id: number
+  garage_bike_id: number
+  category: ExpenseCategory
+  amount_cop: number
+  spent_on: string
+  description: string | null
+  inserted_at: string
+  updated_at: string
+}
+
+export interface GarageSummary {
+  total_cop: number
+  by_category: Partial<Record<ExpenseCategory, number>>
+  by_month: { month: string; total_cop: number }[]
+}
