@@ -15,6 +15,11 @@ import { CATEGORY_LABELS, formatCop } from './categories'
 const SIGNAL = '#ffc700'
 const LINE = '#2e2e32'
 const DIM = '#8d8d93'
+const MAX_TICK_LABEL_LENGTH = 10
+
+function truncateTick(value: string) {
+  return value.length > MAX_TICK_LABEL_LENGTH ? `${value.slice(0, MAX_TICK_LABEL_LENGTH - 1)}…` : value
+}
 
 interface ChartTooltipProps {
   active?: boolean
@@ -75,7 +80,18 @@ export function SpendChart({ summary }: { summary: GarageSummary }) {
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={byCategory} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
             <CartesianGrid stroke={LINE} vertical={false} />
-            <XAxis dataKey="category" stroke={DIM} fontSize={10} tickLine={false} axisLine={{ stroke: LINE }} interval={0} angle={-20} textAnchor="end" height={50} />
+            <XAxis
+              dataKey="category"
+              stroke={DIM}
+              fontSize={10}
+              tickLine={false}
+              axisLine={{ stroke: LINE }}
+              interval={0}
+              angle={-20}
+              textAnchor="end"
+              height={50}
+              tickFormatter={truncateTick}
+            />
             <YAxis stroke={DIM} fontSize={11} tickLine={false} axisLine={false} width={0} />
             <Tooltip content={<ChartTooltip />} cursor={{ fill: LINE, fillOpacity: 0.3 }} />
             <Bar dataKey="total_cop" fill={SIGNAL} radius={[4, 4, 0, 0]} />

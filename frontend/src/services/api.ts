@@ -18,6 +18,17 @@ export function setAuthToken(token: string | null) {
   authToken = token
 }
 
+function describeErrors(errors: unknown): string | null {
+  if (!errors || typeof errors !== 'object') return null
+
+  const parts = Object.entries(errors as Record<string, unknown>).map(([field, value]) => {
+    const message = Array.isArray(value) ? value.join(', ') : String(value)
+    return field === 'detail' ? message : `${field}: ${message}`
+  })
+
+  return parts.length ? parts.join(' · ') : null
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' }
   if (authToken) headers['Authorization'] = `Bearer ${authToken}`
@@ -26,7 +37,13 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     ...init,
     headers: { ...headers, ...init?.headers },
   })
-  if (!res.ok) throw new Error(`API error ${res.status}`)
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => null)
+    const message = describeErrors(body?.errors) ?? `API error ${res.status}`
+    throw new Error(message)
+  }
+
   if (res.status === 204) return undefined as T
   return res.json()
 }

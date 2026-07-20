@@ -5,13 +5,15 @@ interface BikeFormProps {
   initial?: GarageBike
   onSubmit: (attrs: { nickname?: string; brand: string; model: string; year?: number }) => void
   onCancel?: () => void
+  onDirty?: () => void
   isSubmitting?: boolean
+  error?: string | null
 }
 
 const inputClass =
   'cut-corner-sm bg-panel border border-line text-paper px-4 py-3 focus:outline-none focus:border-signal'
 
-export function BikeForm({ initial, onSubmit, onCancel, isSubmitting }: BikeFormProps) {
+export function BikeForm({ initial, onSubmit, onCancel, onDirty, isSubmitting, error }: BikeFormProps) {
   const [nickname, setNickname] = useState(initial?.nickname ?? '')
   const [brand, setBrand] = useState(initial?.brand ?? '')
   const [model, setModel] = useState(initial?.model ?? '')
@@ -32,32 +34,47 @@ export function BikeForm({ initial, onSubmit, onCancel, isSubmitting }: BikeForm
       <input
         placeholder="Apodo (opcional)"
         value={nickname}
-        onChange={e => setNickname(e.target.value)}
+        onChange={e => {
+          setNickname(e.target.value)
+          onDirty?.()
+        }}
         className={inputClass}
       />
       <div className="grid grid-cols-2 gap-3">
         <input
           placeholder="Marca"
           value={brand}
-          onChange={e => setBrand(e.target.value)}
+          onChange={e => {
+            setBrand(e.target.value)
+            onDirty?.()
+          }}
           required
           className={inputClass}
         />
         <input
           placeholder="Modelo"
           value={model}
-          onChange={e => setModel(e.target.value)}
+          onChange={e => {
+            setModel(e.target.value)
+            onDirty?.()
+          }}
           required
           className={inputClass}
         />
       </div>
       <input
         type="number"
+        inputMode="numeric"
         placeholder="Año (opcional)"
         value={year}
-        onChange={e => setYear(e.target.value)}
+        onChange={e => {
+          setYear(e.target.value)
+          onDirty?.()
+        }}
         className={inputClass}
       />
+
+      {error && <p className="text-accent text-sm">{error}</p>}
 
       <div className="flex gap-3">
         <button
@@ -71,7 +88,8 @@ export function BikeForm({ initial, onSubmit, onCancel, isSubmitting }: BikeForm
           <button
             type="button"
             onClick={onCancel}
-            className="cut-corner-sm px-6 py-3 border border-line text-dim hover:text-paper hover:border-dim font-display uppercase tracking-wide transition-colors cursor-pointer"
+            disabled={isSubmitting}
+            className="cut-corner-sm px-6 py-3 border border-line text-dim hover:text-paper hover:border-dim disabled:opacity-30 disabled:cursor-not-allowed font-display uppercase tracking-wide transition-colors cursor-pointer"
           >
             Cancelar
           </button>

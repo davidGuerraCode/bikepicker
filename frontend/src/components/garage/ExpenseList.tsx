@@ -1,5 +1,8 @@
+import { useState } from 'react'
 import type { Expense } from '../../types'
 import { CATEGORY_LABELS, formatCop } from './categories'
+
+const PAGE_SIZE = 15
 
 export function ExpenseList({
   expenses,
@@ -10,11 +13,16 @@ export function ExpenseList({
   onEdit: (expense: Expense) => void
   onDelete: (expense: Expense) => void
 }) {
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+
   if (!expenses.length) {
-    return <p className="text-dim text-sm">Aún no hay gastos para esta moto.</p>
+    return (
+      <p className="text-dim text-sm">Aún no hay gastos para esta moto. Agrega el primero arriba ↑</p>
+    )
   }
 
   const total = expenses.reduce((sum, e) => sum + e.amount_cop, 0)
+  const visibleExpenses = expenses.slice(0, visibleCount)
 
   return (
     <div className="overflow-x-auto">
@@ -29,25 +37,29 @@ export function ExpenseList({
           </tr>
         </thead>
         <tbody>
-          {expenses.map(e => (
+          {visibleExpenses.map(e => (
             <tr key={e.id} className="border-b border-line/50">
               <td className="py-2 pr-4 text-dim">{e.spent_on}</td>
               <td className="py-2 pr-4 text-paper">{CATEGORY_LABELS[e.category]}</td>
               <td className="py-2 pr-4 text-dim">{e.description ?? '—'}</td>
               <td className="py-2 pr-4 text-right text-paper">{formatCop(e.amount_cop)}</td>
-              <td className="py-2 text-right whitespace-nowrap">
-                <button
-                  onClick={() => onEdit(e)}
-                  className="cursor-pointer text-dim hover:text-paper transition-colors text-xs uppercase tracking-wide mr-4"
-                >
-                  Editar
-                </button>
-                <button
-                  onClick={() => onDelete(e)}
-                  className="cursor-pointer text-dim hover:text-accent transition-colors text-xs uppercase tracking-wide"
-                >
-                  Eliminar
-                </button>
+              <td className="py-2 text-right">
+                <div className="flex items-center justify-end gap-2">
+                  <button
+                    onClick={() => onEdit(e)}
+                    aria-label={`Editar gasto de ${CATEGORY_LABELS[e.category]}`}
+                    className="cursor-pointer inline-flex items-center justify-center min-h-[44px] px-3 text-dim hover:text-paper transition-colors text-xs uppercase tracking-wide"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => onDelete(e)}
+                    aria-label={`Eliminar gasto de ${CATEGORY_LABELS[e.category]}`}
+                    className="cursor-pointer inline-flex items-center justify-center min-h-[44px] px-3 text-dim hover:text-accent transition-colors text-xs uppercase tracking-wide"
+                  >
+                    Eliminar
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
@@ -62,6 +74,15 @@ export function ExpenseList({
           </tr>
         </tfoot>
       </table>
+
+      {visibleCount < expenses.length && (
+        <button
+          onClick={() => setVisibleCount(c => c + PAGE_SIZE)}
+          className="cursor-pointer mt-3 text-dim hover:text-paper text-xs uppercase tracking-widest transition-colors"
+        >
+          Ver más ({expenses.length - visibleCount} restantes)
+        </button>
+      )}
     </div>
   )
 }

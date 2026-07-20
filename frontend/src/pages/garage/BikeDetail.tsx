@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { garageBikeRoute } from '../../routeTree'
 import { RequireAuth } from '../../components/auth/RequireAuth'
@@ -6,9 +6,10 @@ import { BikeForm } from '../../components/garage/BikeForm'
 import { ExpenseForm } from '../../components/garage/ExpenseForm'
 import { ExpenseList } from '../../components/garage/ExpenseList'
 import { SpendChart } from '../../components/garage/SpendChart'
-import { UndoToast } from '../../components/ui/UndoToast'
+import { ToastStack } from '../../components/ui/ToastStack'
 import { Modal } from '../../components/ui/Modal'
 import { CATEGORY_LABELS, formatCop } from '../../components/garage/categories'
+import { useToastQueue } from '../../hooks/useToastQueue'
 import type { Expense } from '../../types'
 import {
   useBike,
@@ -22,6 +23,10 @@ import {
 
 const UNDO_DELETE_MS = 5000
 
+function errorMessage(err: unknown, fallback: string) {
+  return err instanceof Error ? err.message : fallback
+}
+
 function BikeDetailContent({ bikeId }: { bikeId: number }) {
   const { data: bike, isLoading } = useBike(bikeId)
   const { data: expenses } = useExpenses(bikeId)
@@ -30,43 +35,88 @@ function BikeDetailContent({ bikeId }: { bikeId: number }) {
   const createExpense = useCreateExpense(bikeId)
   const updateExpense = useUpdateExpense(bikeId)
   const { mutate: deleteExpense } = useDeleteExpense(bikeId)
+  const { toasts, pushToast, dismissToast } = useToastQueue()
+
   const [editing, setEditing] = useState(false)
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
 
-  const [pendingDelete, setPendingDelete] = useState<Expense | null>(null)
-  const pendingRef = useRef<Expense | null>(null)
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [createFormDirty, setCreateFormDirty] = useState(false)
+  const [editFormDirty, setEditFormDirty] = useState(false)
+  const [bikeFormDirty, setBikeFormDirty] = useState(false)
+
+  const [createExpenseError, setCreateExpenseError] = useState<string | null>(null)
+  const [editExpenseError, setEditExpenseError] = useState<string | null>(null)
+  const [bikeError, setBikeError] = useState<string | null>(null)
+
+  function openEditModal(expense: Expense) {
+    setEditFormDirty(false)
+    setEditExpenseError(null)
+    setEditingExpense(expense)
+  }
 
   function requestDelete(expense: Expense) {
-    // A previous pending delete is still waiting — finalize it right away
-    // before starting the new undo window, so only one row is ever "pending".
-    if (pendingRef.current && timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
-      deleteExpense(pendingRef.current.id)
-    }
-
-    pendingRef.current = expense
-    setPendingDelete(expense)
-    timeoutRef.current = setTimeout(() => {
-      deleteExpense(expense.id)
-      pendingRef.current = null
-      setPendingDelete(null)
-    }, UNDO_DELETE_MS)
+    pushToast(
+      {
+        id: expense.id,
+        message: `Gasto eliminado: ${CATEGORY_LABELS[expense.category]} · ${formatCop(expense.amount_cop)}`,
+        durationMs: UNDO_DELETE_MS,
+        action: { label: 'Deshacer', onClick: () => dismissToast(expense.id) },
+      },
+      () => deleteExpense(expense.id),
+    )
   }
 
-  function undoDelete() {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    pendingRef.current = null
-    setPendingDelete(null)
+  function handleCreateExpense(attrs: {
+    category: string
+    amount_cop: number
+    spent_on: string
+    description?: string
+  }) {
+    setCreateExpenseError(null)
+    createExpense.mutate(attrs, {
+      onSuccess: () => {
+        setCreateFormDirty(false)
+        pushToast({ id: `expense-added-${Date.now()}`, message: 'Gasto agregado', durationMs: 3000 })
+      },
+      onError: err => setCreateExpenseError(errorMessage(err, 'No se pudo agregar el gasto.')),
+    })
   }
 
-  useEffect(() => {
-    // If the page unloads mid-undo-window, honor the delete the user already
-    // saw happen rather than silently reviving the row on next load.
-    return () => {
-      if (pendingRef.current) deleteExpense(pendingRef.current.id)
+  function handleUpdateExpense(attrs: {
+    category: string
+    amount_cop: number
+    spent_on: string
+    description?: string
+  }) {
+    if (!editingExpense) return
+    setEditExpenseError(null)
+    updateExpense.mutate(
+      { id: editingExpense.id, attrs },
+      {
+        onSuccess: () => setEditingExpense(null),
+        onError: err => setEditExpenseError(errorMessage(err, 'No se pudo guardar el gasto.')),
+      },
+    )
+  }
+
+  function handleUpdateBike(attrs: { nickname?: string; brand: string; model: string; year?: number }) {
+    setBikeError(null)
+    updateBike.mutate(attrs, {
+      onSuccess: () => {
+        setEditing(false)
+        setBikeFormDirty(false)
+        pushToast({ id: `bike-updated-${Date.now()}`, message: 'Cambios guardados', durationMs: 3000 })
+      },
+      onError: err => setBikeError(errorMessage(err, 'No se pudo guardar la moto.')),
+    })
+  }
+
+  function handleLeaveClick(e: React.MouseEvent) {
+    if (!createFormDirty && !bikeFormDirty) return
+    if (!window.confirm('¿Descartar los cambios sin guardar?')) {
+      e.preventDefault()
     }
-  }, [deleteExpense])
+  }
 
   if (isLoading || !bike) {
     return (
@@ -79,7 +129,11 @@ function BikeDetailContent({ bikeId }: { bikeId: number }) {
   return (
     <div className="min-h-screen bg-asphalt text-paper px-4 py-12">
       <div className="max-w-3xl mx-auto">
-        <Link to="/garage" className="font-stat text-dim hover:text-paper text-sm tracking-widest mb-6 inline-block">
+        <Link
+          to="/garage"
+          onClick={handleLeaveClick}
+          className="font-stat text-dim hover:text-paper text-sm tracking-widest mb-6 inline-block"
+        >
           ← Volver al garage
         </Link>
 
@@ -89,8 +143,14 @@ function BikeDetailContent({ bikeId }: { bikeId: number }) {
               <BikeForm
                 initial={bike}
                 isSubmitting={updateBike.isPending}
-                onSubmit={attrs => updateBike.mutate(attrs, { onSuccess: () => setEditing(false) })}
-                onCancel={() => setEditing(false)}
+                error={bikeError}
+                onDirty={() => setBikeFormDirty(true)}
+                onSubmit={handleUpdateBike}
+                onCancel={() => {
+                  setEditing(false)
+                  setBikeFormDirty(false)
+                  setBikeError(null)
+                }}
               />
             </div>
           ) : (
@@ -105,6 +165,7 @@ function BikeDetailContent({ bikeId }: { bikeId: number }) {
               </div>
               <button
                 onClick={() => setEditing(true)}
+                aria-label="Editar información de la moto"
                 className="cut-corner-sm px-5 py-2 border border-line text-dim hover:text-paper hover:border-dim font-display uppercase text-sm tracking-wide transition-colors cursor-pointer"
               >
                 Editar
@@ -113,48 +174,53 @@ function BikeDetailContent({ bikeId }: { bikeId: number }) {
           )}
         </div>
 
-        {summary && (
-          <div className="bg-panel border border-line p-6 mb-8 cut-corner">
+        {!editing && (
+          <>
+            <div className="bg-panel border border-line p-6 mb-8 cut-corner">
+              <h2 className="font-stat text-dim text-xs tracking-widest uppercase mb-4">
+                Registrar gasto
+              </h2>
+              <ExpenseForm
+                isSubmitting={createExpense.isPending}
+                error={createExpenseError}
+                onDirty={() => setCreateFormDirty(true)}
+                onSubmit={handleCreateExpense}
+              />
+            </div>
+
+            <div className="bg-panel border border-line p-6 mb-8 cut-corner">
+              <h2 className="font-stat text-dim text-xs tracking-widest uppercase mb-4">Historial</h2>
+              <ExpenseList
+                expenses={(expenses ?? []).filter(e => !toasts.some(t => t.id === e.id))}
+                onEdit={openEditModal}
+                onDelete={requestDelete}
+              />
+            </div>
+          </>
+        )}
+
+        {summary && !editing && (
+          <div className="bg-panel border border-line p-6 cut-corner">
+            <h2 className="font-stat text-dim text-xs tracking-widest uppercase mb-4">Resumen</h2>
             <SpendChart summary={summary} />
           </div>
         )}
-
-        <div className="bg-panel border border-line p-6 mb-8 cut-corner">
-          <p className="font-stat text-dim text-xs tracking-widest uppercase mb-4">
-            Registrar gasto
-          </p>
-          <ExpenseForm isSubmitting={createExpense.isPending} onSubmit={attrs => createExpense.mutate(attrs)} />
-        </div>
-
-        <div className="bg-panel border border-line p-6 cut-corner">
-          <p className="font-stat text-dim text-xs tracking-widest uppercase mb-4">Historial</p>
-          <ExpenseList
-            expenses={(expenses ?? []).filter(e => e.id !== pendingDelete?.id)}
-            onEdit={setEditingExpense}
-            onDelete={requestDelete}
-          />
-        </div>
       </div>
 
-      {pendingDelete && (
-        <UndoToast
-          message={`Gasto eliminado: ${CATEGORY_LABELS[pendingDelete.category]} · ${formatCop(pendingDelete.amount_cop)}`}
-          durationMs={UNDO_DELETE_MS}
-          onUndo={undoDelete}
-        />
-      )}
+      <ToastStack toasts={toasts} />
 
       {editingExpense && (
-        <Modal title="Editar gasto" onClose={() => setEditingExpense(null)}>
+        <Modal
+          title="Editar gasto"
+          confirmClose={editFormDirty}
+          onClose={() => setEditingExpense(null)}
+        >
           <ExpenseForm
             initial={editingExpense}
             isSubmitting={updateExpense.isPending}
-            onSubmit={attrs =>
-              updateExpense.mutate(
-                { id: editingExpense.id, attrs },
-                { onSuccess: () => setEditingExpense(null) },
-              )
-            }
+            error={editExpenseError}
+            onDirty={() => setEditFormDirty(true)}
+            onSubmit={handleUpdateExpense}
             onCancel={() => setEditingExpense(null)}
           />
         </Modal>

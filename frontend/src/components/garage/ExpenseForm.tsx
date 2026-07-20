@@ -11,13 +11,15 @@ interface ExpenseFormProps {
     description?: string
   }) => void
   onCancel?: () => void
+  onDirty?: () => void
   isSubmitting?: boolean
+  error?: string | null
 }
 
 const inputClass =
   'cut-corner-sm bg-panel border border-line text-paper px-4 py-3 focus:outline-none focus:border-signal'
 
-export function ExpenseForm({ initial, onSubmit, onCancel, isSubmitting }: ExpenseFormProps) {
+export function ExpenseForm({ initial, onSubmit, onCancel, onDirty, isSubmitting, error }: ExpenseFormProps) {
   const [category, setCategory] = useState<ExpenseCategory>(initial?.category ?? CATEGORIES[0])
   const [amount, setAmount] = useState(initial ? String(initial.amount_cop) : '')
   const [spentOn, setSpentOn] = useState(initial?.spent_on ?? new Date().toISOString().slice(0, 10))
@@ -42,7 +44,10 @@ export function ExpenseForm({ initial, onSubmit, onCancel, isSubmitting }: Expen
       <div className="grid sm:grid-cols-2 gap-3">
         <select
           value={category}
-          onChange={e => setCategory(e.target.value as ExpenseCategory)}
+          onChange={e => {
+            setCategory(e.target.value as ExpenseCategory)
+            onDirty?.()
+          }}
           className={inputClass}
         >
           {CATEGORIES.map(c => (
@@ -53,9 +58,13 @@ export function ExpenseForm({ initial, onSubmit, onCancel, isSubmitting }: Expen
         </select>
         <input
           type="number"
+          inputMode="numeric"
           placeholder="Costo (COP)"
           value={amount}
-          onChange={e => setAmount(e.target.value)}
+          onChange={e => {
+            setAmount(e.target.value)
+            onDirty?.()
+          }}
           min={1}
           required
           className={inputClass}
@@ -64,16 +73,25 @@ export function ExpenseForm({ initial, onSubmit, onCancel, isSubmitting }: Expen
       <input
         type="date"
         value={spentOn}
-        onChange={e => setSpentOn(e.target.value)}
+        onChange={e => {
+          setSpentOn(e.target.value)
+          onDirty?.()
+        }}
         required
         className={`${inputClass} w-full`}
       />
       <input
         placeholder="Nota (opcional)"
         value={description}
-        onChange={e => setDescription(e.target.value)}
+        onChange={e => {
+          setDescription(e.target.value)
+          onDirty?.()
+        }}
         className={inputClass}
       />
+
+      {error && <p className="text-accent text-sm">{error}</p>}
+
       <div className="flex gap-3">
         <button
           type="submit"
@@ -86,7 +104,8 @@ export function ExpenseForm({ initial, onSubmit, onCancel, isSubmitting }: Expen
           <button
             type="button"
             onClick={onCancel}
-            className="cut-corner-sm px-6 py-3 border border-line text-dim hover:text-paper hover:border-dim font-display uppercase tracking-wide transition-colors cursor-pointer"
+            disabled={isSubmitting}
+            className="cut-corner-sm px-6 py-3 border border-line text-dim hover:text-paper hover:border-dim disabled:opacity-30 disabled:cursor-not-allowed font-display uppercase tracking-wide transition-colors cursor-pointer"
           >
             Cancelar
           </button>
